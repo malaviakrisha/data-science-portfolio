@@ -1,36 +1,62 @@
 import os
-import random
+import pandas as pd
 from supabase import create_client
 from dotenv import load_dotenv
 
-SUBURBS = ["Bandra West", "Andheri West", "Dadar West", "Powai", "Borivali West"]
+CSV_PATH = os.path.join(os.path.dirname(__file__), "mumbai_properties.csv")
 
-def generate_data(num_listings=5):
+def get_real_market_data(csv_path, num_listings=2):
+    print("📊 Reading Mumbai properties dataset...")
+    
+    df = pd.read_csv(csv_path)
+    
+    # Drop rows with missing crucial columns
+    df = df.dropna(subset=['locality', 'bedroom_num', 'area', 'price', 'price_per_sqft'])
+    
+    # Filter out bad data
+    df = df[df['area'] > 0]
+    df = df[df['price'] > 0]
+    df = df[df['bedroom_num'] > 0]
+    
+    # Sample random listings to simulate daily new entries
+    daily_sample = df.sample(n=num_listings)
+    
     data = []
-    for _ in range(num_listings):
-        suburb = random.choice(SUBURBS)
-        bhk = random.choice([1, 2, 3, 4])
-        price_per_sqft = random.randint(15000, 60000)
-        sqft = bhk * random.randint(450, 600)
-        price_cr = round((sqft * price_per_sqft) / 10000000, 2)
+    for _, row in daily_sample.iterrows():
+        suburb      = str(row['locality']).strip()[:100]
+        bhk         = int(row['bedroom_num'])
+        sqft        = int(row['area'])
+        price_cr    = round(float(row['price']) / 10_000_000, 2)
+        price_psqft = int(row['price_per_sqft'])
+
         data.append({
-            "suburb": suburb,
-            "bhk": bhk,
-            "sqft": sqft,
-            "price_cr": price_cr,
-            "price_per_sqft": price_per_sqft
+            "suburb":         suburb,
+            "bhk":            bhk,
+            "sqft":           sqft,
+            "price_cr":       price_cr,
+            "price_per_sqft": price_psqft
         })
+
+    print(f"✅ Sampled {len(data)} listings from dataset.")
     return data
+
 
 def push_to_supabase(data):
     load_dotenv()
     url = os.getenv("SUPABASE_URL")
     key = os.getenv("SUPABASE_KEY")
 
+    if not url or not key:
+        raise ValueError("❌ Missing SUPABASE_URL or SUPABASE_KEY in environment.")
+
     client = create_client(url, key)
     response = client.table("listings").insert(data).execute()
-    print(f"✅ Successfully pushed {len(data)} rows to Supabase.")
+    print(f"🚀 Successfully pushed {len(data)} real market listings to Supabase.")
+
 
 if __name__ == "__main__":
-    new_data = generate_data(5)
-    push_to_supabase(new_data)
+    try:
+        new_data = get_real_market_data(CSV_PATH, num_listings=2)
+        push_to_supabase(new_data)
+    except Exception as e:
+        print(f"❌ Pipeline Error: {e}")
