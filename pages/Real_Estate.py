@@ -89,6 +89,3 @@ else:
         )
         st.plotly_chart(fig_bar, use_container_width=True)
 
-    # ─── RAW DATA EXPANDER ───
-    with st.expander("📂 View Live Production Ledger (Raw Database Rows)"):
-        st.dataframe(filtered_df, use_container_width=True)
