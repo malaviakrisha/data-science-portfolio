@@ -1,0 +1,26 @@
+name: Daily Real Estate Scraper
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # Runs at midnight UTC every day
+  workflow_dispatch: # Allows you to click a button to run it manually
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: pip install pandas psycopg2-binary python-dotenv
+
+      - name: Run Scraper
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: python pipelines/real_estate_scraper.py
