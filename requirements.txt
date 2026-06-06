@@ -4,3 +4,5 @@ pandas
 psycopg2-binary
 plotly
 python-dotenv
+scikit-learn
+joblib
