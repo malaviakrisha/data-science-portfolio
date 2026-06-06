@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 SUBURBS = ["Bandra West", "Andheri West", "Dadar West", "Powai", "Borivali West"]
 
-def generate_data(num_listings=1): # Changed to 5 as requested
+def generate_data(num_listings=2): # Changed to 5 as requested
     data = []
     for _ in range(num_listings):
         suburb = random.choice(SUBURBS)
@@ -38,5 +38,5 @@ def push_to_supabase(data):
     print(f"✅ Successfully pushed {len(data)} rows to Supabase.")
 
 if __name__ == "__main__":
-    new_data = generate_data(5) # Fetch 5 rows
+    new_data = generate_data(5) # Fetch 2 rows
     push_to_supabase(new_data)
