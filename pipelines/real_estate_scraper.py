@@ -44,8 +44,8 @@ def get_real_market_data(csv_path, num_listings=2):
 
 def push_to_supabase(data):
     load_dotenv()
-    url = st.secrets.get("SUPABASE_URL") or os.environ.get("SUPABASE_URL")
-    key = st.secrets.get("SUPABASE_KEY") or os.environ.get("SUPABASE_KEY")
+    url = st.secrets.get("SUPABASE_URL") 
+    key = st.secrets.get("SUPABASE_KEY") 
 
     if not url or not key:
         raise ValueError("❌ Missing SUPABASE_URL or SUPABASE_KEY in environment.")
