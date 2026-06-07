@@ -43,17 +43,17 @@ def get_real_market_data(csv_path, num_listings=2):
 
 
 def push_to_supabase(data):
-    load_dotenv()
-    url = st.secrets.get("SUPABASE_URL") 
-    key = st.secrets.get("SUPABASE_KEY") 
-
-    if not url or not key:
-        raise ValueError("❌ Missing SUPABASE_URL or SUPABASE_KEY in environment.")
+    # Do NOT rely on load_dotenv() in the cloud.
+    # st.secrets automatically handles local .toml and Cloud Secrets.
+    try:
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+    except KeyError:
+        raise ValueError("❌ SUPABASE_URL or SUPABASE_KEY not found in Streamlit secrets.")
 
     client = create_client(url, key)
     response = client.table("listings").insert(data).execute()
-    print(f"🚀 Successfully pushed {len(data)} real market listings to Supabase.")
-
+    print(f"🚀 Successfully pushed {len(data)} listings.")
 
 if __name__ == "__main__":
     try:
