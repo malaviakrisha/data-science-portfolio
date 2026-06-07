@@ -1,12 +1,9 @@
 import streamlit as st
 import pandas as pd
-import psycopg2
 import plotly.express as px
 import os
 from dotenv import load_dotenv
-
-# Load environment variables for local testing
-load_dotenv()
+from supabase import create_client
 
 # Page Configuration
 st.set_page_config(page_title="Mumbai Real Estate Analytics", layout="wide")
@@ -15,21 +12,20 @@ st.title("🏠 Mumbai Real Estate Sentiment & Price Engine")
 st.markdown("This dashboard reflects live property data automatically aggregated via our automated backend pipeline.")
 
 # Database connection function
-@st.cache_data(ttl=60) # Caches data for 60 seconds to avoid spamming the DB on widget clicks
+@st.cache_data(ttl=60)
 def fetch_live_data():
-    db_url = os.getenv("SUPABASE_DB_URL")
-    if not db_url:
-        st.error("Database connection string missing. Check environment variables.")
-        return pd.DataFrame()
-    
     try:
-        conn = psycopg2.connect(db_url)
-        query = "SELECT * FROM listings ORDER BY scraped_at DESC;"
-        df = pd.read_sql(query, conn)
-        conn.close()
-        return df
+        # Check if we are running locally (st.secrets) or in Cloud
+        # This one line handles both scenarios automatically
+        url = st.secrets["SUPABASE_URL"]
+        key = st.secrets["SUPABASE_KEY"]
+        
+        client = create_client(url, key)
+        response = client.table("listings").select("*").execute()
+        
+        return pd.DataFrame(response.data)
     except Exception as e:
-        st.error(f"Error fetching data from cloud database: {e}")
+        st.error(f"Error fetching data: {e}")
         return pd.DataFrame()
 
 # Load Data

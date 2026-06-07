@@ -12,27 +12,17 @@ Welcome to my production-grade data science project showcase. This platform host
 st.markdown("---")
 
 # Portfolio Introduction Layout
-col_left, col_right = st.columns([2, 1])
+col_left, col_right = st.columns([3, 1])
 
 with col_left:
     st.subheader("👨‍💻 About the Engineer")
     st.markdown("""
-    I specialize in building software-centric AI solutions, transforming raw, messy real-world data into actionable business intelligence. 
-    My engineering approach emphasizes **robust system orchestration**, clean feature engineering pipelines, and interactive analytical interfaces that bridge complex backend models with intuitive user operations.
-    
-    **Core Technical Competencies:**
-    * **Languages & Frameworks:** Python, Streamlit, FastAPI, Pandas, NumPy
-    * **Machine Learning & MLOps:** Scikit-Learn, XGBoost, Automated ETL Pipelines, Git LFS
-    * **Data Architecture:** SQL, Supabase, Programmatic Web Scraping (Scrapy)
+
     """)
 
 with col_right:
     st.subheader("🎯 Project Navigation Guide")
     st.markdown("""
-    Use the sidebar menu on the left to seamlessly hop between the deployed applications:
-    
-    1. **🏠 Real Estate Market Engine:** Explore automated daily property data tracking, algorithmic outlier detection, and geospatial market visualizations.
-    2. **⚙️ Infrastructure Predictive Monitor:** Review real-time aerospace-grade failure probability estimation using actual historical fleet data arrays from NASA.
     """)
 
 st.markdown("---")
@@ -40,7 +30,7 @@ st.markdown("---")
 # Quick Project Summaries
 st.subheader("📂 Deployed Applications Overview")
 
-card1, card2 = st.columns(2)
+card1, card2, card3 = st.columns(3)
 
 with card1:
     st.info("### 🏠 Mumbai Real Estate Engine")
@@ -58,4 +48,9 @@ with card2:
     * **Data Source:** NASA C-MAPSS Jet Engine Degradation Simulation Dataset.
     * **Infrastructure:** Serialized Random Forest predictive architecture handling multi-dimensional feature windowing.
     * **Key Feature:** Interactive historical lifecycle time-machine playback with a real-time risk gauge.
+    """)
+
+with card3:
+    st.warning("### ⚙️ Bias Audit Montioring")
+    st.markdown("""
     """)
