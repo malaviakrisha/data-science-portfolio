@@ -83,7 +83,7 @@ demonstrating end-to-end data pipelines, predictive modeling, and scalable MLOps
 st.markdown("---")
 
 # ─── PORTFOLIO INTRODUCTION LAYOUT ───
-col_left, col_right = st.columns([2.25, 1])
+col_left, col_right = st.columns([1, 1])
 
 with col_left:
     st.subheader("👨‍💻 About the Engineer")
@@ -94,7 +94,7 @@ Aspiring Data Scientist interested in turning data into useful insights and real
 
 with col_right:
     st.subheader("🎯 System Status")
-    m1, m2 = st.columns(2)
+    m1, m2 = st.columns([1,1])
     m1.metric(label="Data Pipelines", value="Active", delta="100%")
     m2.metric(label="DB Gateway", value="Connected", delta="Supabase")
 
