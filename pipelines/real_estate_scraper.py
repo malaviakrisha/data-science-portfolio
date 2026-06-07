@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from supabase import create_client
 from dotenv import load_dotenv
+import streamlit as st
 
 CSV_PATH = os.path.join(os.path.dirname(__file__), "mumbai_properties.csv")
 
@@ -43,8 +44,8 @@ def get_real_market_data(csv_path, num_listings=2):
 
 def push_to_supabase(data):
     load_dotenv()
-    url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_KEY")
+    url = os.getenv("SUPABASE_URL") or st.secrets.get("SUPABASE_URL")
+    key = os.getenv("SUPABASE_KEY") or st.secrets.get("SUPABASE_KEY")
 
     if not url or not key:
         raise ValueError("❌ Missing SUPABASE_URL or SUPABASE_KEY in environment.")
