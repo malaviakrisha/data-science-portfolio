@@ -43,14 +43,13 @@ def get_real_market_data(csv_path, num_listings=2):
 
 
 def push_to_supabase(data):
-    # Do NOT rely on load_dotenv() in the cloud.
-    # st.secrets automatically handles local .toml and Cloud Secrets.
+    # Works in both GitHub Actions (env vars) and locally (.toml via st.secrets)
     try:
-        url = st.secrets["SUPABASE_URL"]
-        key = st.secrets["SUPABASE_KEY"]
-    except KeyError:
-        raise ValueError("❌ SUPABASE_URL or SUPABASE_KEY not found in Streamlit secrets.")
-
+        url = os.environ.get("SUPABASE_URL") or st.secrets["SUPABASE_URL"]
+        key = os.environ.get("SUPABASE_KEY") or st.secrets["SUPABASE_KEY"]
+    except Exception:
+        raise ValueError("❌ SUPABASE_URL or SUPABASE_KEY not found.")
+    
     client = create_client(url, key)
     response = client.table("listings").insert(data).execute()
     print(f"🚀 Successfully pushed {len(data)} listings.")
